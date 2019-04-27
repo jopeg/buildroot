@@ -4,14 +4,12 @@
 #
 ################################################################################
 
-KEEPALIVED_VERSION = 2.0.10
+KEEPALIVED_VERSION = 2.0.15
 KEEPALIVED_SITE = http://www.keepalived.org/software
 KEEPALIVED_DEPENDENCIES = host-pkgconf openssl
 KEEPALIVED_LICENSE = GPL-2.0+
 KEEPALIVED_LICENSE_FILES = COPYING
 KEEPALIVED_CONF_OPTS = --disable-hardening
-# We're patching configure.ac
-KEEPALIVED_AUTORECONF = YES
 
 ifeq ($(BR2_PACKAGE_JSON_C),y)
 KEEPALIVED_DEPENDENCIES += json-c
@@ -46,6 +44,13 @@ KEEPALIVED_DEPENDENCIES += iptables
 KEEPALIVED_CONF_OPTS += --enable-libiptc
 else
 KEEPALIVED_CONF_OPTS += --disable-libiptc
+endif
+
+ifeq ($(BR2_PACKAGE_LIBNFTNL),y)
+KEEPALIVED_DEPENDENCIES += libnftnl
+KEEPALIVED_CONF_OPTS += --enable-nftables
+else
+KEEPALIVED_CONF_OPTS += --disable-nftables
 endif
 
 $(eval $(autotools-package))

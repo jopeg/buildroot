@@ -12,9 +12,9 @@ Fix unsafe strncpy() calls when we do expect a null-terminated
 destination buffer.
 
 Signed-off-by: Philippe Gerum <rpm@xenomai.org>
-[Retrieved from
-https://gitlab.denx.de/Xenomai/xenomai/commit/cdc63fe259c70a8a5304aa07087650ebf4ee6b5d]
 Signed-off-by: Fabrice Fontaine <fontaine.fabrice@gmail.com>
+[Retrieved from:
+https://gitlab.denx.de/Xenomai/xenomai/commit/cdc63fe259c70a8a5304aa07087650ebf4ee6b5d]
 ---
  demo/posix/cobalt/can-rtt.c        | 4 ++--
  demo/posix/cobalt/eth_p_all.c      | 3 ++-

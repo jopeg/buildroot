@@ -4,8 +4,8 @@
 #
 ################################################################################
 
-BIND_VERSION = 9.11.5
-BIND_SITE = http://ftp.isc.org/isc/bind9/$(BIND_VERSION)
+BIND_VERSION = 9.11.6-P1
+BIND_SITE = https://ftp.isc.org/isc/bind9/$(BIND_VERSION)
 # bind does not support parallel builds.
 BIND_MAKE = $(MAKE1)
 BIND_INSTALL_STAGING = YES
@@ -55,12 +55,8 @@ endif
 
 ifeq ($(BR2_PACKAGE_OPENSSL),y)
 BIND_DEPENDENCIES += openssl
-BIND_CONF_ENV += \
-	ac_cv_func_EVP_sha256=yes \
-	ac_cv_func_EVP_sha384=yes \
-	ac_cv_func_EVP_sha512=yes
 BIND_CONF_OPTS += \
-	--with-openssl=$(STAGING_DIR)/usr LIBS="-lz" \
+	--with-openssl=$(STAGING_DIR)/usr \
 	--with-ecdsa=yes \
 	--with-eddsa=no \
 	--with-aes=yes

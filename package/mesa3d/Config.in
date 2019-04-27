@@ -83,6 +83,12 @@ config BR2_PACKAGE_MESA3D_DRIVER
 config BR2_PACKAGE_MESA3D_NEEDS_XA
 	bool
 
+# Quote from mesa3d meson.build: "kmsro driver requires one or more
+# renderonly drivers (vc4, etnaviv, freedreno)". But only vc4 support
+# is available by using the (deprecated) autotools build system.
+config BR2_PACKAGE_MESA3D_GALLIUM_KMSRO
+	bool
+
 comment "Gallium drivers"
 
 config BR2_PACKAGE_MESA3D_GALLIUM_DRIVER_ETNAVIV
@@ -92,6 +98,16 @@ config BR2_PACKAGE_MESA3D_GALLIUM_DRIVER_ETNAVIV
 	select BR2_PACKAGE_MESA3D_OPENGL_EGL
 	help
 	  Mesa driver for Vivante GPUs.
+
+config BR2_PACKAGE_MESA3D_GALLIUM_DRIVER_KMSRO
+	bool "Gallium KMSRO driver"
+	depends on BR2_PACKAGE_MESA3D_GALLIUM_KMSRO
+	help
+	  Support various sorts of KMS displays with the
+	  renderonly layer used to attach a GPU.
+
+comment "Gallium KMSRO needs one or more renderonly drivers"
+	depends on !BR2_PACKAGE_MESA3D_GALLIUM_KMSRO
 
 config BR2_PACKAGE_MESA3D_GALLIUM_DRIVER_NOUVEAU
 	bool "Gallium nouveau driver"
@@ -125,6 +141,7 @@ comment "R600 driver needs a uClibc or glibc toolchain when llvm is enabled"
 
 config BR2_PACKAGE_MESA3D_GALLIUM_DRIVER_RADEONSI
 	bool "Gallium Radeon SI driver"
+	depends on BR2_USE_MMU # libdrm
 	depends on BR2_i386 || BR2_x86_64
 	depends on BR2_PACKAGE_MESA3D_LLVM
 	depends on BR2_TOOLCHAIN_USES_UCLIBC || BR2_TOOLCHAIN_USES_GLIBC # elfutils
@@ -141,6 +158,7 @@ config BR2_PACKAGE_MESA3D_GALLIUM_DRIVER_RADEONSI
 # Radeon SI needs libelf
 # musl is not currently compatible with elfutils
 comment "Radeon SI driver needs a uClibc or glibc toolchain"
+	depends on BR2_USE_MMU
 	depends on BR2_PACKAGE_MESA3D_LLVM
 	depends on !(BR2_TOOLCHAIN_USES_UCLIBC || BR2_TOOLCHAIN_USES_GLIBC)
 
@@ -164,6 +182,7 @@ config BR2_PACKAGE_MESA3D_GALLIUM_DRIVER_VC4
 	bool "Gallium vc4 driver"
 	depends on BR2_ARM_CPU_HAS_NEON || BR2_aarch64
 	select BR2_PACKAGE_MESA3D_GALLIUM_DRIVER
+	select BR2_PACKAGE_MESA3D_GALLIUM_KMSRO
 	select BR2_PACKAGE_LIBDRM_VC4
 	select BR2_PACKAGE_MESA3D_NEEDS_XA
 	select BR2_PACKAGE_MESA3D_OPENGL_EGL

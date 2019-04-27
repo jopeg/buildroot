@@ -1,3 +1,91 @@
+2019.02.1, Released March 29th, 2019
+
+	Important / security related fixes.
+
+	pkg-generic: Only tweak .la files needing it to ensure they
+	are not included in subsequent package file lists.
+
+	test-pkg: Generate a basic package config if none is
+	specified.
+
+	Updated/fixed packages: asterisk, avahi, bash, beecrypt,
+	binutils, busybox, clamav, cups, efl, eigen, fetchmail, file,
+	flashrom, fltk, gerbera, git, glibc, gnuradio, go,
+	gst-plugins-bad, intel-gmmlib, jq, kexec, kf5-modemmanager-qt,
+	leveldb, libcurl, libdrm, libftdi1, libglib2, libiio, libpcap,
+	libseccomp, libssh2, log4cplus, lvm2, mariadb, mender,
+	mongodb, mosquitto, musl, nodejs, ntp, openjpeg, owfs, php,
+	pure-ftpd, putty, python-aiojobs, qt5webkit, rdesktop, samba4,
+	sunxi-tools, supertux, swupdate, tpm2-abrmd, tpm2-tss,
+	wavemon, wireshark, vsftpd, xapp_xdm, xen,
+	xdriver_xf86-video-fbdev, xlib_libXdmcp
+
+	Issues resolved (http://bugs.uclibc.org):
+
+	#11716: Typo on website, saying latest release is 2018.2.11
+
+2019.02, released March 4th, 2019
+
+	Minor fixes.
+
+	Libressl support added for Qt 5.6 as a replacement for
+	openssl, as 5.6 is not compatible with openssl 1.1.x.
+
+	Updated/fixed packages: cutelyst, devmem2, gqrx,
+	gst-plugins-bad, libraw, libsoxr, qt5base, runc, systemd, tor
+
+2019.02-rc3, released March 1st, 2019
+
+	Fixes all over the tree.
+
+	Openssl support dropped from Qt 5.6, as it isn't compatible
+	with openssl 1.1.x.
+
+	Toolchain: GCC 8.x updated to 8.3.0, fixing a number of
+	issues.
+
+	Dependencies: Require CMake 3.8 or newer to fix compilation
+	issue with certain packages. If not available, host-cmake will
+	instead be built.
+
+	Printvars: Fix performance regression since 2018.02
+
+	Scanypi: Correctly handle underscores in python package names.
+
+	Updated/fixed packages: botan, clamav, cryptopp, i2pd,
+	ibrcommon, iproute2, libcpprestsdk, libssh, lua-curl,
+	luaexpat, qt5base, runc, stress-ng, syslinux, systemd,
+	upmpdcli, zbar
+
+	Issues resolved (http://bugs.uclibc.org):
+
+	#9966: util-linux-2.30/.stamp_built' failed
+	#11696: possible typo in board/pc/post-build.sh
+
+2019.02-rc2, released February 23th, 2019
+
+	Fixes all over the tree.
+
+	Removed zynq_zybo defconfig, as it hasn't seen any update
+	since it was added in 2016, and uses a U-Boot version not
+	compatible with openssl-1.1.x.
+
+	Linux: Ignore user supplied downloadable hashes, as no hash
+	checksums are available for those.
+
+	Updated/fixed packages: bind, cryptopp, docker-containerd,
+	dtc, efivar, gdb, imagemagick, ipmiutil, libcpprestsdk,
+	libcurl, libgpiod, libid3tag, libv4l, log4cplus, luvi,
+	madplay, mender, mosquitto, poco, postgresql, proftpd,
+	pulseaudio, python-django, qemu, qt5base, qwt, rabbitmq-c,
+	reaver, safeclip, stress-ng, swupdate, syslog-ng, systemd,
+	tor, unzip, xenomai
+
+	Issues resolved (http://bugs.uclibc.org):
+
+	#11501: compile sdl2 with enable wayland
+	#11681: .. unable to initialize decompress status for section..
+
 2019.02-rc1, released February 13th, 2019
 
 	Fixes all over the tree and new features.
@@ -147,6 +235,48 @@
 	#11616: 2018.02.09 fails to build libzlib with full RELRO..
 	#11656: Custom device tree and u-boot boot.scr not integrated..
 	#11666: Touchscreen with (Py)Qt5 should use tslib instead of evdev
+
+2018.11.4, Released March 28th, 2019
+
+	Important / security related fixes.
+
+	Updated/fixed packages: avahi, beecrypt, binutils, botan,
+	busybox, clamav, cups, devmem2, efl, fetchmail, file, fltk,
+	gcc, gdb, git, go, gst-plugins-bad, iproute2, jq,
+	kf5-modemmanager-qt, leveldb, libopenssl, libraw, libseccomp,
+	libsoxr, libssh2, mariadb, mosquitto, nodejs, ntp, openjpeg,
+	perl, php, putty, qt5webkit, rdesktop, runc, samba4, swupdate,
+	systemd, tor, vsftpd, wireshark, xapp_xdm, xen, xlib_libXdmcp
+
+2018.11.3, Released February 23th, 2019
+
+	Important / security related fixes.
+
+	Ensure the PLATFORM and OS environment variables are not set,
+	as they cause build issues for some packages.
+
+	The package list infrastructure now correctly handles packages
+	installing files with old mtime.
+
+	Linux: Skip hash checks for user supplied downloadable
+	patches, as no hash checksums are available for those.
+
+	scanpypi: protect against zip-slip vulnerability in zip/tar
+	handling
+
+	Download: fixes for SSH/SCP support
+
+	SDK: Fix handling of relative symlinks (targets starting with
+	'.' or '..')
+
+	Updated/fixed packages: bind, dhcpcd, docker-compose,
+	docker-containerd, docker-engine, dovecot, dovecot-pigeonhole,
+	dtc, efivar, ghostscript, gnuradio, imagemagick, jpeg-turbo,
+	libarchive, libb64, libcurl, libgeotiff, libgpiod, libid3tag,
+	libupnp18, log4cplus, madplay, meson, mosquitto, openssh, php,
+	poco, postgresql, proftpd, pulseaudio, python, python-django,
+	python3, qt5base, reaver, runc, sg3_utils, sqlcipher,
+	swupdate, systemd, unzip, webkitgtk, xenomai
 
 2018.11.2, Released January 30th, 2019
 
@@ -928,6 +1058,39 @@
 	#10896: /bin/sh not in /etc/shells
 	#10961: Grub2 fails to build for x86_64 when BR2_SSP_ALL is
 		enabled
+
+2018.02.12, Released March 29th, 2019
+
+	Important / security related fixes.
+
+	Updated/fixed packages: avahi, beecrypt, busybox, clamav,
+	cups, devmem2, fetchmail, file, fltk, gcc, gdb, git, jq,
+	leveldb, libopenssl, libraw, libseccomp, libssh2,
+	libunistring, mariadb, mosquitto, nodejs, ntp, openjpeg, perl,
+	php, putty, qt5webkit, rdesktop, systemd, wireshark, vsftpd,
+	xapp_xdm, xlib_libXdmcp
+
+2018.02.11, Released February 23th, 2019
+
+	Important / security related fixes.
+
+	Ensure the PLATFORM and OS environment variables are not set,
+	as they cause build issues for some packages.
+
+	The package list infrastructure now correctly handles packages
+	installing files with old mtime.
+
+	Linux: Skip hash checks for user supplied downloadable
+	patches, as no hash checksums are available for those.
+
+	scanpypi: protect against zip-slip vulnerability in zip/tar
+	handling
+
+	Updated/fixed packages: bind, dhcpcd, dovecot, ghostscript,
+	gnuradio, imagemagick, jpeg-turbo, libarchive, libb64,
+	libcurl, libid3tag, madplay, mosquitto, openssh, php,
+	postgresql, proftpd, python, python-django, python3, qt5base,
+	sqlcipher, swupdate, systemd, unzip, webkitgtk
 
 2018.02.10, Released January 31th, 2019
 

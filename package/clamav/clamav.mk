@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-CLAMAV_VERSION = 0.101.1
+CLAMAV_VERSION = 0.101.2
 CLAMAV_SITE = https://www.clamav.net/downloads/production
 CLAMAV_LICENSE = GPL-2.0
 CLAMAV_LICENSE_FILES = COPYING COPYING.bzip2 COPYING.file COPYING.getopt \
@@ -21,6 +21,10 @@ CLAMAV_DEPENDENCIES = \
 CLAMAV_CONF_ENV = \
 	ac_cv_c_mmap_private=yes \
 	have_cv_ipv6=yes
+
+ifeq ($(BR2_TOOLCHAIN_HAS_LIBATOMIC),y)
+CLAMAV_CONF_ENV += LIBS=-latomic
+endif
 
 # UCLIBC_HAS_FTS is disabled, therefore disable fanotify (missing fts.h)
 CLAMAV_CONF_OPTS = \

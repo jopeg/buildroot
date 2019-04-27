@@ -52,8 +52,6 @@ else
 # option '-no-avx512' (available for latest only)
 endif
 
-QT5BASE_CONFIGURE_OPTS += $(call qstrip,$(BR2_PACKAGE_QT5BASE_CUSTOM_CONF_OPTS))
-
 ifeq ($(BR2_PACKAGE_LIBDRM),y)
 QT5BASE_CONFIGURE_OPTS += -kms
 QT5BASE_DEPENDENCIES += libdrm
@@ -155,7 +153,13 @@ QT5BASE_CONFIGURE_OPTS += $(if $(BR2_PACKAGE_QT5BASE_DIRECTFB),-directfb,-no-dir
 QT5BASE_DEPENDENCIES   += $(if $(BR2_PACKAGE_QT5BASE_DIRECTFB),directfb)
 
 ifeq ($(BR2_PACKAGE_QT5BASE_XCB),y)
-QT5BASE_CONFIGURE_OPTS += -xcb -system-xkbcommon
+QT5BASE_CONFIGURE_OPTS += -xcb
+ifeq ($(BR2_PACKAGE_QT5_VERSION_5_6),y)
+QT5BASE_CONFIGURE_OPTS += -system-xkbcommon-x11
+else
+QT5BASE_CONFIGURE_OPTS += -xkbcommon
+endif
+
 QT5BASE_DEPENDENCIES   += \
 	libxcb \
 	xcb-util-wm \
@@ -190,8 +194,15 @@ else
 QT5BASE_CONFIGURE_OPTS += -no-eglfs
 endif
 
+ifeq ($(BR2_PACKAGE_QT5_VERSION_5_6),y)
+# No OpenSSL 1.1.x support in Qt 5.6.x
+# LibreSSL works with shared linkage only and -fpermissive patch
+QT5BASE_CONFIGURE_OPTS += $(if $(BR2_PACKAGE_LIBRESSL),-openssl-linked,-no-openssl)
+QT5BASE_DEPENDENCIES   += $(if $(BR2_PACKAGE_LIBRESSL),openssl)
+else
 QT5BASE_CONFIGURE_OPTS += $(if $(BR2_PACKAGE_OPENSSL),-openssl,-no-openssl)
 QT5BASE_DEPENDENCIES   += $(if $(BR2_PACKAGE_OPENSSL),openssl)
+endif
 
 QT5BASE_CONFIGURE_OPTS += $(if $(BR2_PACKAGE_QT5BASE_FONTCONFIG),-fontconfig,-no-fontconfig)
 QT5BASE_DEPENDENCIES   += $(if $(BR2_PACKAGE_QT5BASE_FONTCONFIG),fontconfig)
@@ -270,7 +281,7 @@ ifeq ($(BR2_PACKAGE_QT5_VERSION_LATEST),y)
 ifeq ($(BR2_PACKAGE_IMX_GPU_VIV),y)
 # use vivante backend
 QT5BASE_EGLFS_DEVICE = EGLFS_DEVICE_INTEGRATION = eglfs_viv
-else ifeq ($(BR2_PACKAGE_SUNXI_MALI)$(BR2_PACKAGE_SUNXI_MALI_MAINLINE),y)
+else ifeq ($(BR2_PACKAGE_SUNXI_MALI_MAINLINE),y)
 # use mali backend
 QT5BASE_EGLFS_DEVICE = EGLFS_DEVICE_INTEGRATION = eglfs_mali
 endif
@@ -296,6 +307,9 @@ define QT5BASE_CONFIGURE_HOSTCC
 	$(SED) 's,^QMAKE_CXX\s*=.*,QMAKE_CXX = $(HOSTCXX),' $(@D)/mkspecs/common/g++-base.conf
 endef
 
+# Must be last so can override all options set by Buildroot
+QT5BASE_CONFIGURE_OPTS += $(call qstrip,$(BR2_PACKAGE_QT5BASE_CUSTOM_CONF_OPTS))
+
 define QT5BASE_CONFIGURE_CMDS
 	mkdir -p $(@D)/mkspecs/devices/linux-buildroot-g++/
 	sed 's/@EGLFS_DEVICE@/$(QT5BASE_EGLFS_DEVICE)/g' \
@@ -310,7 +324,7 @@ define QT5BASE_CONFIGURE_CMDS
 	(cd $(@D); \
 		$(TARGET_MAKE_ENV) \
 		PKG_CONFIG="$(PKG_CONFIG_HOST_BINARY)" \
-		MAKEFLAGS="$(MAKEFLAGS) -j$(PARALLEL_JOBS)" \
+		MAKEFLAGS="-j$(PARALLEL_JOBS) $(MAKEFLAGS)" \
 		./configure \
 		-v \
 		-prefix /usr \
@@ -342,7 +356,6 @@ endef
 
 define QT5BASE_INSTALL_STAGING_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) install
-	$(QT5_LA_PRL_FILES_FIXUP)
 	$(QT5BASE_INSTALL_QT_CONF)
 endef
 
