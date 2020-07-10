@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-LIVE555_VERSION = 2019.03.06
+LIVE555_VERSION = 2020.06.25
 LIVE555_SOURCE = live.$(LIVE555_VERSION).tar.gz
-LIVE555_SITE = http://www.live555.com
+LIVE555_SITE = http://www.live555.com/liveMedia/public
 LIVE555_LICENSE = LGPL-2.1+
 LIVE555_LICENSE_FILES = COPYING
 LIVE555_INSTALL_STAGING = YES
@@ -20,6 +20,13 @@ else
 LIVE555_CONFIG_TARGET = linux-with-shared-libraries
 LIVE555_LIBRARY_LINK = $(TARGET_CC) -o
 LIVE555_CFLAGS += -fPIC
+endif
+
+ifeq ($(BR2_PACKAGE_OPENSSL),y)
+LIVE555_DEPENDENCIES += openssl
+LIVE555_LIBS = -lssl -lcrypto
+else
+LIVE555_CFLAGS += -DNO_OPENSSL
 endif
 
 ifndef ($(BR2_ENABLE_LOCALE),y)
@@ -37,6 +44,8 @@ define LIVE555_CONFIGURE_CMDS
 	# Must have a whitespace at the end of LIBRARY_LINK, otherwise static link
 	# fails
 	echo 'LIBRARY_LINK = $(LIVE555_LIBRARY_LINK) ' >> $(@D)/config.$(LIVE555_CONFIG_TARGET)
+	echo 'LIBS_FOR_CONSOLE_APPLICATION = $(LIVE555_LIBS)' >> $(@D)/config.$(LIVE555_CONFIG_TARGET)
+	echo 'LIBS_FOR_LIVEMEDIA_LIB = $(LIVE555_LIBS)' >> $(@D)/config.$(LIVE555_CONFIG_TARGET)
 	(cd $(@D); ./genMakefiles $(LIVE555_CONFIG_TARGET))
 endef
 

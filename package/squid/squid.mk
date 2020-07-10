@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-SQUID_VERSION = 4.6
+SQUID_VERSION = 4.11
 SQUID_SOURCE = squid-$(SQUID_VERSION).tar.xz
 SQUID_SITE = http://www.squid-cache.org/Versions/v4
 SQUID_LICENSE = GPL-2.0+
@@ -83,9 +83,6 @@ endef
 define SQUID_INSTALL_INIT_SYSTEMD
 	$(INSTALL) -D -m 0644 $(@D)/tools/systemd/squid.service \
 		$(TARGET_DIR)/usr/lib/systemd/system/squid.service
-	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
-	ln -sf ../../../..//usr/lib/systemd/system/squid.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/squid.service
 endef
 
 $(eval $(autotools-package))
